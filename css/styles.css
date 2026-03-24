@@ -362,14 +362,10 @@ body {
     letter-spacing: 0.05em;
 }
 
-.badge-equipo--rojo    { background-color: #e74c3c; }
-.badge-equipo--azul    { background-color: #2980b9; }
 .badge-equipo--verde   { background-color: #27ae60; }
 .badge-equipo--amarillo{ background-color: #f39c12; color: #333; }
+.badge-equipo--azul    { background-color: #2980b9; }
 .badge-equipo--naranja { background-color: #e67e22; }
-.badge-equipo--morado  { background-color: #8e44ad; }
-.badge-equipo--blanco  { background-color: #bdc3c7; color: #333; }
-.badge-equipo--negro   { background-color: #2c3e50; }
 .badge-equipo--default { background-color: #7f8c8d; }
 
 /* ── Badge devocional / culto ──────────────────────────────── */

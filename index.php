@@ -99,14 +99,10 @@ try {
  */
 function claseBadgeEquipo(string $color): string {
     $mapa = [
-        'rojo'     => 'badge-equipo--rojo',
-        'azul'     => 'badge-equipo--azul',
         'verde'    => 'badge-equipo--verde',
         'amarillo' => 'badge-equipo--amarillo',
+        'azul'     => 'badge-equipo--azul',
         'naranja'  => 'badge-equipo--naranja',
-        'morado'   => 'badge-equipo--morado',
-        'blanco'   => 'badge-equipo--blanco',
-        'negro'    => 'badge-equipo--negro',
     ];
     return $mapa[strtolower($color)] ?? 'badge-equipo--default';
 }
