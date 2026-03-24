@@ -32,6 +32,6 @@ CREATE TABLE IF NOT EXISTS asistencia (
 -- ============================================================
 INSERT INTO asistencia (fecha, devocional, convocado, color_equipo, culto, nombre, apellido, lider_celula, linea)
 VALUES
-    ('2024-03-10', 'Sí', 'Ambos',      'Rojo',   'AM', 'Juan',   'Pérez',    'María López',    'Línea 1'),
+    ('2024-03-10', 'Sí', 'Ambos',      'Verde',   'AM', 'Juan',   'Pérez',    'María López',    'Línea 1'),
     ('2024-03-10', 'No', 'Consolidar', 'Azul',   'PM', 'Ana',    'García',   'Carlos Ruiz',    'Línea 2'),
-    ('2024-03-17', 'Sí', 'Ministrar',  'Verde',  'AM', 'Pedro',  'Martínez', 'Laura Jiménez',  'Línea 3');
+    ('2024-03-17', 'Sí', 'Ministrar',  'Amarillo',  'AM', 'Pedro',  'Martínez', 'Laura Jiménez',  'Línea 3');

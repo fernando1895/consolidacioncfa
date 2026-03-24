@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // ── Colores de equipo disponibles ────────────────────────────
-$coloresEquipo = ['Rojo', 'Azul', 'Verde', 'Amarillo', 'Naranja', 'Morado', 'Blanco', 'Negro'];
+$coloresEquipo = ['Verde', 'Amarillo', 'Azul', 'Naranja'];
 
 $tituloPagina = 'Nuevo Registro';
 require_once 'includes/header.php';
