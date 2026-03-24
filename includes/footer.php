@@ -14,5 +14,6 @@
     </p>
 </footer>
 
+<script src="<?= htmlspecialchars($raiz ?? '') ?>js/autocomplete-persona.js"></script>
 </body>
 </html>
