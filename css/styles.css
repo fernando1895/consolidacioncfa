@@ -1,0 +1,517 @@
+/* ============================================================
+   Estilos principales – Sistema de Consolidación & Ministración
+   Ministerio: Consolidación & Ministración - Dpto de
+               Consolidación y Célula
+   Diseño responsivo compatible con móvil, tablet y escritorio.
+   ============================================================ */
+
+/* ── Variables CSS ─────────────────────────────────────────── */
+:root {
+    --color-primario:    #2c3e7a;   /* Azul oscuro institucional */
+    --color-secundario:  #4a6cf7;   /* Azul brillante de acento */
+    --color-fondo:       #f4f6fc;   /* Fondo gris claro */
+    --color-blanco:      #ffffff;
+    --color-texto:       #2d2d2d;
+    --color-borde:       #d1d5e0;
+    --color-exito:       #27ae60;
+    --color-peligro:     #e74c3c;
+    --color-advertencia: #f39c12;
+    --radio-borde:       8px;
+    --sombra:            0 2px 12px rgba(44, 62, 122, 0.10);
+    --transicion:        0.25s ease;
+}
+
+/* ── Reinicio y base ───────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Encabezado ────────────────────────────────────────────── */
+.encabezado {
+    background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-secundario) 100%);
+    color: var(--color-blanco);
+    padding: 1rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+.encabezado__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.encabezado__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.encabezado__icono {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.encabezado__titulo h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.encabezado__titulo p {
+    font-size: 0.8rem;
+    opacity: 0.85;
+}
+
+/* ── Navegación ────────────────────────────────────────────── */
+.navegacion {
+    background-color: rgba(0,0,0,0.15);
+    border-radius: var(--radio-borde);
+    overflow: hidden;
+}
+
+.navegacion ul {
+    list-style: none;
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.35rem;
+}
+
+.navegacion a {
+    color: var(--color-blanco);
+    text-decoration: none;
+    padding: 0.4rem 0.9rem;
+    border-radius: 5px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: background-color var(--transicion);
+    display: block;
+}
+
+.navegacion a:hover,
+.navegacion a.activo {
+    background-color: rgba(255,255,255,0.25);
+}
+
+/* ── Contenido principal ───────────────────────────────────── */
+.contenido-principal {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex: 1;
+    width: 100%;
+}
+
+/* ── Alertas / mensajes ────────────────────────────────────── */
+.alerta {
+    padding: 0.85rem 1.2rem;
+    border-radius: var(--radio-borde);
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+    border-left: 4px solid transparent;
+}
+
+.alerta--exito {
+    background-color: #eafaf1;
+    border-color: var(--color-exito);
+    color: #1e7e45;
+}
+
+.alerta--error {
+    background-color: #fdecea;
+    border-color: var(--color-peligro);
+    color: #a93226;
+}
+
+.alerta--advertencia {
+    background-color: #fef9e7;
+    border-color: var(--color-advertencia);
+    color: #9a6100;
+}
+
+/* ── Tarjeta / Card ────────────────────────────────────────── */
+.tarjeta {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra);
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.tarjeta__encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-fondo);
+}
+
+.tarjeta__titulo {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-primario);
+}
+
+/* ── Formularios ───────────────────────────────────────────── */
+.formulario__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.1rem;
+}
+
+.formulario__grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.formulario__grupo label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-primario);
+}
+
+.formulario__grupo input,
+.formulario__grupo select {
+    padding: 0.55rem 0.85rem;
+    border: 1.5px solid var(--color-borde);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--color-texto);
+    background-color: var(--color-blanco);
+    transition: border-color var(--transicion), box-shadow var(--transicion);
+    width: 100%;
+}
+
+.formulario__grupo input:focus,
+.formulario__grupo select:focus {
+    outline: none;
+    border-color: var(--color-secundario);
+    box-shadow: 0 0 0 3px rgba(74,108,247,0.15);
+}
+
+.formulario__acciones {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+/* ── Botones ───────────────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: filter var(--transicion), transform var(--transicion);
+    white-space: nowrap;
+}
+
+.btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+    filter: brightness(0.95);
+}
+
+.btn--primario {
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+}
+
+.btn--exito {
+    background-color: var(--color-exito);
+    color: var(--color-blanco);
+}
+
+.btn--peligro {
+    background-color: var(--color-peligro);
+    color: var(--color-blanco);
+}
+
+.btn--secundario {
+    background-color: #7f8c8d;
+    color: var(--color-blanco);
+}
+
+.btn--sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+/* ── Barra de herramientas / búsqueda ──────────────────────── */
+.barra-herramientas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.buscador {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.buscador input,
+.buscador select {
+    padding: 0.5rem 0.85rem;
+    border: 1.5px solid var(--color-borde);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    min-width: 180px;
+}
+
+.buscador input:focus,
+.buscador select:focus {
+    outline: none;
+    border-color: var(--color-secundario);
+}
+
+/* ── Tabla de datos ────────────────────────────────────────── */
+.tabla-contenedor {
+    overflow-x: auto;           /* Scroll horizontal en pantallas pequeñas */
+    border-radius: var(--radio-borde);
+    border: 1px solid var(--color-borde);
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    min-width: 900px;
+}
+
+.tabla thead th {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tabla tbody tr {
+    border-bottom: 1px solid var(--color-borde);
+    transition: background-color var(--transicion);
+}
+
+.tabla tbody tr:last-child {
+    border-bottom: none;
+}
+
+.tabla tbody tr:hover {
+    background-color: #eef2ff;
+}
+
+.tabla tbody td {
+    padding: 0.7rem 1rem;
+    vertical-align: middle;
+}
+
+.tabla__acciones {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: nowrap;
+}
+
+/* ── Badges de color de equipo ─────────────────────────────── */
+.badge-equipo {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-blanco);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-equipo--rojo    { background-color: #e74c3c; }
+.badge-equipo--azul    { background-color: #2980b9; }
+.badge-equipo--verde   { background-color: #27ae60; }
+.badge-equipo--amarillo{ background-color: #f39c12; color: #333; }
+.badge-equipo--naranja { background-color: #e67e22; }
+.badge-equipo--morado  { background-color: #8e44ad; }
+.badge-equipo--blanco  { background-color: #bdc3c7; color: #333; }
+.badge-equipo--negro   { background-color: #2c3e50; }
+.badge-equipo--default { background-color: #7f8c8d; }
+
+/* ── Badge devocional / culto ──────────────────────────────── */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.badge--si  { background-color: #eafaf1; color: #1e7e45; }
+.badge--no  { background-color: #fdecea; color: #a93226; }
+.badge--am  { background-color: #fef9e7; color: #9a6100; }
+.badge--pm  { background-color: #eaf0fb; color: #1a3c8a; }
+.badge--consolidar { background-color: #f0e6fa; color: #6a0dad; }
+.badge--ministrar  { background-color: #e6f4fa; color: #0a6d9e; }
+.badge--ambos      { background-color: #e6faf0; color: #0a6e3f; }
+
+/* ── Paginación ────────────────────────────────────────────── */
+.paginacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.paginacion a,
+.paginacion span {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border: 1.5px solid var(--color-borde);
+    border-radius: 5px;
+    font-size: 0.88rem;
+    text-decoration: none;
+    color: var(--color-primario);
+    transition: background-color var(--transicion);
+}
+
+.paginacion a:hover {
+    background-color: var(--color-fondo);
+}
+
+.paginacion .activo {
+    background-color: var(--color-secundario);
+    border-color: var(--color-secundario);
+    color: var(--color-blanco);
+}
+
+/* ── Estadísticas rápidas ──────────────────────────────────── */
+.estadisticas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-tarjeta {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio-borde);
+    box-shadow: var(--sombra);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-tarjeta__icono {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.stat-tarjeta__info p {
+    font-size: 0.78rem;
+    color: #7f8c8d;
+    margin-bottom: 0.15rem;
+}
+
+.stat-tarjeta__info strong {
+    font-size: 1.6rem;
+    color: var(--color-primario);
+    font-weight: 700;
+}
+
+/* ── Pie de página ─────────────────────────────────────────── */
+.pie-pagina {
+    background-color: var(--color-primario);
+    color: rgba(255,255,255,0.75);
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.82rem;
+    margin-top: auto;
+}
+
+/* ── Responsivo: tablet ────────────────────────────────────── */
+@media (max-width: 768px) {
+    .encabezado__titulo h1 {
+        font-size: 1rem;
+    }
+
+    .navegacion ul {
+        gap: 0.1rem;
+    }
+
+    .navegacion a {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .tarjeta {
+        padding: 1.2rem;
+    }
+
+    .formulario__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .barra-herramientas {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ── Responsivo: móvil ─────────────────────────────────────── */
+@media (max-width: 480px) {
+    .encabezado__inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .formulario__acciones {
+        flex-direction: column;
+    }
+
+    .estadisticas {
+        grid-template-columns: 1fr 1fr;
+    }
+}
