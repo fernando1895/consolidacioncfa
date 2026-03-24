@@ -10,6 +10,7 @@ require_once 'config/database.php';
 // ── Valores por defecto del formulario ──────────────────────
 $errores = [];
 $datos = [
+    'numero_documento' => '',
     'fecha'        => date('Y-m-d'),   // Fecha de hoy por defecto
     'devocional'   => '',
     'convocado'    => '',
@@ -25,6 +26,7 @@ $datos = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Leer y sanitizar cada campo
+    $datos['numero_documento'] = trim($_POST['numero_documento'] ?? '');
     $datos['fecha']        = trim($_POST['fecha']        ?? '');
     $datos['devocional']   = trim($_POST['devocional']   ?? '');
     $datos['convocado']    = trim($_POST['convocado']    ?? '');
@@ -36,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $datos['linea']        = trim($_POST['linea']        ?? '');
 
     // ── Validaciones ─────────────────────────────────────────
+    if ($datos['numero_documento'] === '') {
+        $errores['numero_documento'] = 'El número de documento es obligatorio.';
+    }
     if ($datos['fecha'] === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $datos['fecha'])) {
         $errores['fecha'] = 'La fecha es obligatoria y debe tener formato válido.';
     }
@@ -70,14 +75,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo = obtenerConexion();
 
             $sql = "INSERT INTO asistencia
-                        (fecha, devocional, convocado, color_equipo, culto,
+                        (numero_documento, fecha, devocional, convocado, color_equipo, culto,
                          nombre, apellido, lider_celula, linea)
                     VALUES
-                        (:fecha, :devocional, :convocado, :color_equipo, :culto,
+                        (:numero_documento, :fecha, :devocional, :convocado, :color_equipo, :culto,
                          :nombre, :apellido, :lider_celula, :linea)";
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
+                ':numero_documento' => $datos['numero_documento'],
                 ':fecha'        => $datos['fecha'],
                 ':devocional'   => $datos['devocional'],
                 ':convocado'    => $datos['convocado'],
@@ -122,6 +128,26 @@ require_once 'includes/header.php';
     <form method="post" action="registro.php" novalidate>
 
         <div class="formulario__grid">
+
+            <!-- Número de documento -->
+            <div class="formulario__grupo">
+                <label for="numero_documento">🪪 Número de documento *</label>
+                <input
+                    type="text"
+                    id="numero_documento"
+                    name="numero_documento"
+                    value="<?= htmlspecialchars($datos['numero_documento']) ?>"
+                    placeholder="Ingrese el número de documento"
+                    maxlength="20"
+                    required
+                    aria-describedby="error-numero_documento"
+                    autocomplete="off"
+                >
+                <span id="doc-hint" class="doc-hint"></span>
+                <?php if (!empty($errores['numero_documento'])): ?>
+                    <span id="error-numero_documento" style="color:#e74c3c;font-size:0.8rem"><?= htmlspecialchars($errores['numero_documento']) ?></span>
+                <?php endif; ?>
+            </div>
 
             <!-- Fecha -->
             <div class="formulario__grupo">
