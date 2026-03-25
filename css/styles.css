@@ -511,15 +511,3 @@ body {
         grid-template-columns: 1fr 1fr;
     }
 }
-
-/* ── Hint de autocompletado por documento ──────────────────── */
-.doc-hint {
-    display: block;
-    font-size: 0.8rem;
-    margin-top: 0.25rem;
-    min-height: 1.2rem;
-}
-.doc-hint--encontrado   { color: #27ae60; }
-.doc-hint--no-encontrado { color: #e67e22; }
-.doc-hint--buscando     { color: #2980b9; }
-.doc-hint--error        { color: #e74c3c; }

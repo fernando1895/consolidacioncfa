@@ -24,7 +24,6 @@ try {
 
         // Leer y sanitizar campos
         $datos = [
-            'numero_documento' => trim($_POST['numero_documento'] ?? ''),
             'fecha'        => trim($_POST['fecha']        ?? ''),
             'devocional'   => trim($_POST['devocional']   ?? ''),
             'convocado'    => trim($_POST['convocado']    ?? ''),
@@ -37,9 +36,6 @@ try {
         ];
 
         // ── Validaciones ─────────────────────────────────────
-        if ($datos['numero_documento'] === '') {
-            $errores['numero_documento'] = 'El número de documento es obligatorio.';
-        }
         if ($datos['fecha'] === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $datos['fecha'])) {
             $errores['fecha'] = 'La fecha es obligatoria y debe tener formato válido.';
         }
@@ -71,7 +67,6 @@ try {
         // ── Actualizar si no hay errores ──────────────────────
         if (empty($errores)) {
             $sql = "UPDATE asistencia SET
-                        numero_documento = :numero_documento,
                         fecha        = :fecha,
                         devocional   = :devocional,
                         convocado    = :convocado,
@@ -84,9 +79,7 @@ try {
                     WHERE id = :id";
 
             $stmt = $pdo->prepare($sql);
-            $ejecutar = $datos;
-            $ejecutar[':id'] = $id;
-            $stmt->execute($ejecutar);
+            $stmt->execute(array_merge($datos, [':id' => $id]));
 
             header('Location: index.php?msg=' . urlencode('Registro actualizado exitosamente.') . '&tipo=exito');
             exit;
@@ -131,26 +124,6 @@ require_once 'includes/header.php';
     <form method="post" action="editar.php?id=<?= (int)$id ?>" novalidate>
 
         <div class="formulario__grid">
-
-            <!-- Número de documento -->
-            <div class="formulario__grupo">
-                <label for="numero_documento">🪪 Número de documento *</label>
-                <input
-                    type="text"
-                    id="numero_documento"
-                    name="numero_documento"
-                    value="<?= htmlspecialchars($datos['numero_documento'] ?? '') ?>"
-                    placeholder="Ingrese el número de documento"
-                    maxlength="20"
-                    required
-                    aria-describedby="error-numero_documento"
-                    autocomplete="off"
-                >
-                <span id="doc-hint" class="doc-hint"></span>
-                <?php if (!empty($errores['numero_documento'])): ?>
-                    <span id="error-numero_documento" style="color:#e74c3c;font-size:0.8rem"><?= htmlspecialchars($errores['numero_documento']) ?></span>
-                <?php endif; ?>
-            </div>
 
             <!-- Fecha -->
             <div class="formulario__grupo">
