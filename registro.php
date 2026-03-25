@@ -10,6 +10,7 @@ require_once 'config/database.php';
 // ── Valores por defecto del formulario ──────────────────────
 $errores = [];
 $datos = [
+    'numero_documento' => '',
     'fecha'        => date('Y-m-d'),   // Fecha de hoy por defecto
     'devocional'   => '',
     'convocado'    => '',
@@ -25,6 +26,7 @@ $datos = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Leer y sanitizar cada campo
+    $datos['numero_documento'] = trim($_POST['numero_documento'] ?? '');
     $datos['fecha']        = trim($_POST['fecha']        ?? '');
     $datos['devocional']   = trim($_POST['devocional']   ?? '');
     $datos['convocado']    = trim($_POST['convocado']    ?? '');
@@ -36,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $datos['linea']        = trim($_POST['linea']        ?? '');
 
     // ── Validaciones ─────────────────────────────────────────
+    if ($datos['numero_documento'] === '' || !preg_match('/^\d{1,20}$/', $datos['numero_documento'])) {
+        $errores['numero_documento'] = 'El número de documento es obligatorio y debe contener solo dígitos.';
+    }
     if ($datos['fecha'] === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $datos['fecha'])) {
         $errores['fecha'] = 'La fecha es obligatoria y debe tener formato válido.';
     }
@@ -69,15 +74,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $pdo = obtenerConexion();
 
-            $sql = "INSERT INTO asistencia
-                        (fecha, devocional, convocado, color_equipo, culto,
+            // ── Insertar en asistencia ────────────────────────────────
+            $sqlAsistencia = "INSERT INTO asistencia
+                        (numero_documento, fecha, devocional, convocado, color_equipo, culto,
                          nombre, apellido, lider_celula, linea)
                     VALUES
-                        (:fecha, :devocional, :convocado, :color_equipo, :culto,
+                        (:numero_documento, :fecha, :devocional, :convocado, :color_equipo, :culto,
                          :nombre, :apellido, :lider_celula, :linea)";
 
-            $stmt = $pdo->prepare($sql);
+            $stmt = $pdo->prepare($sqlAsistencia);
             $stmt->execute([
+                ':numero_documento' => $datos['numero_documento'],
                 ':fecha'        => $datos['fecha'],
                 ':devocional'   => $datos['devocional'],
                 ':convocado'    => $datos['convocado'],
@@ -85,6 +92,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':culto'        => $datos['culto'],
                 ':nombre'       => $datos['nombre'],
                 ':apellido'     => $datos['apellido'],
+                ':lider_celula' => $datos['lider_celula'],
+                ':linea'        => $datos['linea'],
+            ]);
+
+            // ── Upsert en personas (crear o actualizar catálogo) ─────────
+            $sqlPersona = "INSERT INTO personas
+                        (numero_documento, nombre, apellido, color_equipo, lider_celula, linea)
+                    VALUES
+                        (:numero_documento, :nombre, :apellido, :color_equipo, :lider_celula, :linea)
+                    ON DUPLICATE KEY UPDATE
+                        nombre       = VALUES(nombre),
+                        apellido     = VALUES(apellido),
+                        color_equipo = VALUES(color_equipo),
+                        lider_celula = VALUES(lider_celula),
+                        linea        = VALUES(linea)";
+
+            $stmtPersona = $pdo->prepare($sqlPersona);
+            $stmtPersona->execute([
+                ':numero_documento' => $datos['numero_documento'],
+                ':nombre'       => $datos['nombre'],
+                ':apellido'     => $datos['apellido'],
+                ':color_equipo' => $datos['color_equipo'],
                 ':lider_celula' => $datos['lider_celula'],
                 ':linea'        => $datos['linea'],
             ]);
@@ -122,6 +151,28 @@ require_once 'includes/header.php';
     <form method="post" action="registro.php" novalidate>
 
         <div class="formulario__grid">
+
+            <!-- Número de documento -->
+            <div class="formulario__grupo formulario__grupo--documento">
+                <label for="numero_documento">🪺 Número de documento *</label>
+                <input
+                    type="text"
+                    id="numero_documento"
+                    name="numero_documento"
+                    value="<?= htmlspecialchars($datos['numero_documento']) ?>"
+                    placeholder="Ingrese el número de documento"
+                    maxlength="20"
+                    inputmode="numeric"
+                    pattern="[0-9]+"
+                    required
+                    autocomplete="off"
+                    aria-describedby="error-numero_documento doc-estado"
+                >
+                <span id="doc-estado" class="doc-estado" aria-live="polite"></span>
+                <?php if (!empty($errores['numero_documento'])): ?>
+                    <span id="error-numero_documento" style="color:#e74c3c;font-size:0.8rem"><?= htmlspecialchars($errores['numero_documento']) ?></span>
+                <?php endif; ?>
+            </div>
 
             <!-- Fecha -->
             <div class="formulario__grupo">
@@ -169,7 +220,7 @@ require_once 'includes/header.php';
             <!-- Color del equipo -->
             <div class="formulario__grupo">
                 <label for="color_equipo">🎨 Color del equipo *</label>
-                <select id="color_equipo" name="color_equipo" required aria-describedby="error-color_equipo">
+                <select id="color_equipo" name="color_equipo" required aria-describedby="error-color_equipo" data-autofill="true">
                     <option value="">— Seleccione —</option>
                     <?php foreach ($coloresEquipo as $color): ?>
                         <option value="<?= htmlspecialchars($color) ?>"
@@ -207,6 +258,7 @@ require_once 'includes/header.php';
                     placeholder="Ingrese el nombre"
                     maxlength="100"
                     required
+                    data-autofill="true"
                     aria-describedby="error-nombre"
                 >
                 <?php if (!empty($errores['nombre'])): ?>
@@ -225,6 +277,7 @@ require_once 'includes/header.php';
                     placeholder="Ingrese el apellido"
                     maxlength="100"
                     required
+                    data-autofill="true"
                     aria-describedby="error-apellido"
                 >
                 <?php if (!empty($errores['apellido'])): ?>
@@ -243,6 +296,7 @@ require_once 'includes/header.php';
                     placeholder="Nombre del líder de célula"
                     maxlength="150"
                     required
+                    data-autofill="true"
                     aria-describedby="error-lider_celula"
                 >
                 <?php if (!empty($errores['lider_celula'])): ?>
@@ -261,6 +315,7 @@ require_once 'includes/header.php';
                     placeholder="Ej: Línea 1, Línea 2…"
                     maxlength="150"
                     required
+                    data-autofill="true"
                     aria-describedby="error-linea"
                 >
                 <?php if (!empty($errores['linea'])): ?>
@@ -277,5 +332,137 @@ require_once 'includes/header.php';
 
     </form>
 </div>
+
+<script>
+(function () {
+    'use strict';
+
+    const docInput    = document.getElementById('numero_documento');
+    const docEstado   = document.getElementById('doc-estado');
+    const autofillEls = document.querySelectorAll('[data-autofill="true"]');
+
+    if (!docInput) return;
+
+    // Helpers para bloquear / desbloquear campos auto-rellenables
+    function bloquearCampos() {
+        autofillEls.forEach(el => {
+            el.setAttribute('readonly', 'readonly');
+            el.setAttribute('tabindex', '-1');
+            el.style.backgroundColor = '#f0f0f0';
+            el.style.cursor = 'not-allowed';
+            // Para <select>, readonly no funciona nativamente; usar disabled + hidden input
+            if (el.tagName === 'SELECT') {
+                el.setAttribute('disabled', 'disabled');
+                // Asegurar que el valor se envíe igual: usamos un input hidden hermano
+                let hidden = el.parentElement.querySelector('input[type=hidden][name="' + el.name + '"]');
+                if (!hidden) {
+                    hidden = document.createElement('input');
+                    hidden.type  = 'hidden';
+                    hidden.name  = el.name;
+                    el.parentElement.appendChild(hidden);
+                }
+                hidden.value = el.value;
+            }
+        });
+    }
+
+    function desbloquearCampos() {
+        autofillEls.forEach(el => {
+            el.removeAttribute('readonly');
+            el.removeAttribute('tabindex');
+            el.removeAttribute('disabled');
+            el.style.backgroundColor = '';
+            el.style.cursor = '';
+            if (el.tagName === 'SELECT') {
+                const hidden = el.parentElement.querySelector('input[type=hidden][name="' + el.name + '"]');
+                if (hidden) hidden.remove();
+            }
+        });
+    }
+
+    function limpiarCampos() {
+        autofillEls.forEach(el => {
+            if (el.tagName === 'SELECT') {
+                el.value = '';
+            } else {
+                el.value = '';
+            }
+        });
+    }
+
+    function mostrarEstado(tipo, texto) {
+        docEstado.className = 'doc-estado doc-estado--' + tipo;
+        docEstado.textContent = texto;
+    }
+
+    function limpiarEstado() {
+        docEstado.className = 'doc-estado';
+        docEstado.textContent = '';
+    }
+
+    // Rellenar campos con datos recibidos
+    function rellenarCampos(datos) {
+        const mapa = {
+            nombre:       'nombre',
+            apellido:     'apellido',
+            color_equipo: 'color_equipo',
+            lider_celula: 'lider_celula',
+            linea:        'linea',
+        };
+        Object.entries(mapa).forEach(([clave, id]) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.value = datos[clave] ?? '';
+            // Actualizar hidden sibling si existe (para <select>)
+            if (el.tagName === 'SELECT') {
+                const hidden = el.parentElement.querySelector('input[type=hidden][name="' + el.name + '"]');
+                if (hidden) hidden.value = el.value;
+            }
+        });
+    }
+
+    // Evento principal: blur en el campo de documento
+    docInput.addEventListener('blur', function () {
+        const doc = this.value.trim();
+
+        // Si es válido del lado del cliente: solo dígitos, no vacío
+        if (doc === '' || !/^\d{1,20}$/.test(doc)) {
+            limpiarEstado();
+            desbloquearCampos();
+            limpiarCampos();
+            return;
+        }
+
+        mostrarEstado('buscando', '\u23F3 Buscando...');
+
+        fetch('api/buscar_persona.php?doc=' + encodeURIComponent(doc))
+            .then(function (res) {
+                if (!res.ok) throw new Error('Error HTTP ' + res.status);
+                return res.json();
+            })
+            .then(function (json) {
+                if (json.encontrada) {
+                    rellenarCampos(json.datos);
+                    bloquearCampos();
+                    mostrarEstado('encontrada', '\u2714 Persona registrada — ' + json.datos.nombre + ' ' + json.datos.apellido);
+                } else {
+                    desbloquearCampos();
+                    limpiarCampos();
+                    mostrarEstado('nueva', '\u271A Nueva persona — complete los datos');
+                }
+            })
+            .catch(function () {
+                desbloquearCampos();
+                mostrarEstado('error', '\u26A0 No se pudo verificar el documento. Complete los datos manualmente.');
+            });
+    });
+
+    // Si el campo ya tiene valor al cargar (ej. tras error de validación PHP),
+    // disparar la verificación automáticamente
+    if (docInput.value.trim() !== '' && /^\d{1,20}$/.test(docInput.value.trim())) {
+        docInput.dispatchEvent(new Event('blur'));
+    }
+}());
+</script>
 
 <?php require_once 'includes/footer.php'; ?>

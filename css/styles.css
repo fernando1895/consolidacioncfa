@@ -511,3 +511,43 @@ body {
         grid-template-columns: 1fr 1fr;
     }
 }
+
+/* ── Campo de documento con indicador de estado ──────────── */
+.formulario__grupo--documento {
+    grid-column: 1 / -1;  /* Ocupa todo el ancho del grid */
+}
+
+.doc-estado {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    min-height: 1.2em;
+    border-radius: var(--radio-borde);
+    padding: 0.25rem 0.6rem;
+    transition: background-color var(--transicion), color var(--transicion);
+}
+
+.doc-estado:empty {
+    padding: 0;
+}
+
+.doc-estado--encontrada {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.doc-estado--nueva {
+    background-color: #e2e8f4;
+    color: #2c3e7a;
+}
+
+.doc-estado--buscando {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.doc-estado--error {
+    background-color: #fde8e8;
+    color: #721c24;
+}
